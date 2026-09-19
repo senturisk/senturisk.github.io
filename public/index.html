@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#230647" />
+    <title>Senturisk</title>
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/jpeg" href="/logo.png">
+    <link rel="apple-touch-icon" href="/logo.png">
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="Senturisk">
+    <meta name="description" content="">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Senturisk">
+    <meta property="og:site_name" content="Senturisk Web" />
+    <meta property="og:description" content="">
+    <meta property="og:image" content="/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Senturisk">
+    <meta property="twitter:description" content="">
+    <meta property="twitter:image" content="/og-image.png">
+
+    <!-- JSON-LD Structured Data Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Senturisk Corporation",
+      "description": "Private equity firm operating as a software and technology company with roots in academic and scientific research.",
+      "logo": "logo.png",
+      "sameAs": [
+        "https://www.facebook.com/senturisk",
+        "https://www.instagram.com/senturisk",
+        "https://x.com/senturisk",
+        "https://linkedin.com/company/senturisk",
+        "https://www.youtube.com/@senturisk",
+        "https://github.com/senturisk",
+        "https://huggingface.co/senturisk",
+        "https://medium.com/@senturisk"
+      ]
+    }
+    </script>
+
+    <!-- Google Fonts: Bricolage Grotesque -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Light Theme - Solid High Contrast */
+            --bg-color: #f1f5f9;
+            --glass-bg: rgba(255, 255, 255, 0.5);
+            
+            --wave-1: #3b82f6; /* Solid Blue */
+            --wave-2: #8b5cf6; /* Solid Purple */
+            --wave-3: #ec4899; /* Solid Pink */
+            
+            --card-bg: #ffffff;
+            --card-fg: #0f172a;
+            
+            --text-main: #020617;
+            --text-muted: #475569;
+            --accent: #4f46e5;
+            
+            --chamfer: 16px;
+            --trans-speed: 0.5s;
+            --trans-easing: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                /* Dark Theme - Solid High Contrast */
+                --bg-color: #020617;
+                --glass-bg: rgba(2, 6, 23, 0.6);
+                
+                --wave-1: #1d4ed8; /* Darker Blue */
+                --wave-2: #6d28d9; /* Darker Purple */
+                --wave-3: #be185d; /* Darker Pink */
+                
+                --card-bg: #0f172a;
+                --card-fg: #f8fafc;
+                
+                --text-main: #f8fafc;
+                --text-muted: #94a3b8;
+                --accent: #818cf8;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none !important;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Bricolage Grotesque', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        #cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        .shockwave {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%) scale(1);
+            animation: ripple 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: translate(-50%, -50%) scale(8);
+                opacity: 0;
+                border-width: 0px;
+            }
+        }
+
+        #intro-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--bg-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1.2s ease-in-out, visibility 1.2s ease-in-out;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        .bg-waves {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .wave-svg {
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            top: 0;
+            left: -50%;
+            animation: waveFlow 15s infinite alternate ease-in-out;
+        }
+
+        .wave-1 { fill: var(--wave-1); animation-duration: 20s; opacity: 0.8; }
+        .wave-2 { fill: var(--wave-2); animation-duration: 15s; animation-delay: -5s; opacity: 0.7; }
+        .wave-3 { fill: var(--wave-3); animation-duration: 25s; animation-delay: -10s; opacity: 0.6; }
+
+        @keyframes waveFlow {
+            0% { transform: translateX(0) scaleY(1); }
+            50% { transform: translateX(10%) scaleY(1.1); }
+            100% { transform: translateX(-10%) scaleY(0.9); }
+        }
+
+        .glass-layer {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(50px);
+            -webkit-backdrop-filter: blur(50px);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin-top: 10vh;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .reveal-element {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s ease, transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .reveal-element.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        h1 {
+            font-size: clamp(3.5rem, 10vw, 6rem);
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+            color: var(--text-main);
+        }
+
+        .tagline {
+            font-size: clamp(1rem, 3vw, 1.25rem);
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .interactive-area {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            min-height: 400px;
+        }
+
+        #contact-btn {
+            background-color: var(--card-bg);
+            color: var(--card-fg);
+            font-family: inherit;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border: none;
+            padding: 1.5rem 4rem;
+            clip-path: polygon(var(--chamfer) 0, 100% 0, 100% calc(100% - var(--chamfer)), calc(100% - var(--chamfer)) 100%, 0 100%, 0 var(--chamfer));
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: absolute;
+            top: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        #contact-btn:hover {
+            background-color: var(--card-fg);
+            color: var(--card-bg);
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        #contact-btn.fade-out {
+            opacity: 0;
+            transform: translateY(-30px) scale(0.95);
+            pointer-events: none;
+        }
+
+        #socials-section {
+            width: 100%;
+            max-width: 650px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: absolute;
+            top: 0;
+        }
+
+        #socials-section.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            position: relative;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+
+        .view-toggle {
+            background-color: var(--card-bg);
+            color: var(--card-fg);
+            border: none;
+            padding: 0.5rem;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .view-toggle:hover {
+            background-color: var(--card-fg);
+            color: var(--card-bg);
+        }
+
+        .links-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            width: 100%;
+            transition: all var(--trans-speed) var(--trans-easing);
+            justify-content: center;
+        }
+
+        .card {
+            position: relative;
+            background-color: var(--card-bg);
+            color: var(--card-fg);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            border: none;
+            clip-path: polygon(var(--chamfer) 0, 100% 0, 100% calc(100% - var(--chamfer)), calc(100% - var(--chamfer)) 100%, 0 100%, 0 var(--chamfer));
+            transition: all var(--trans-speed) var(--trans-easing);
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .card:hover {
+            background-color: var(--card-fg);
+            color: var(--card-bg);
+            transform: translateY(-4px);
+        }
+
+        .icon-wrapper {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            transition: all var(--trans-speed) ease;
+        }
+
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            opacity: 0;
+            transition: opacity var(--trans-speed) ease;
+            white-space: nowrap;
+        }
+
+        .platform {
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+        }
+
+        .username {
+            font-size: 0.9rem;
+            font-weight: 600;
+            opacity: 0.7;
+        }
+
+        .links-container.grid-view .card { 
+            width: 90px; 
+            height: 90px; 
+            justify-content: center; 
+            padding: 0;
+        }
+        
+        .links-container.list-view { 
+            flex-direction: column; 
+            align-items: stretch; 
+        }
+        
+        .links-container.list-view .card { 
+            width: 100%; 
+            height: 90px; /* Predictable height for positioning */
+            justify-content: flex-start; 
+            padding: 0 1.5rem;
+        }
+        
+        .links-container.list-view .card-content { 
+            opacity: 1;
+            right: 1.5rem;
+            top: 0;
+            bottom: 0;
+            justify-content: space-between;
+            padding: 1.2rem 0; /* Vertical spacing inside absolute container */
+            align-items: flex-end;
+        }
+
+        @media (max-width: 600px) {
+            .links-container.grid-view .card { 
+                width: calc(33.333% - 1rem); 
+                height: 80px; 
+            }
+            .links-container.list-view .card {
+                height: 85px;
+            }
+            .links-container.list-view .card-content {
+                padding: 1rem 0;
+            }
+        }
+
+        footer {
+            margin-top: 4rem;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            font-size: 0.75rem;
+            font-weight: 500;
+            line-height: 1.6;
+            color: var(--text-muted);
+            padding-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Intro Particle Canvas -->
+    <div id="intro-container">
+        <canvas id="particle-canvas"></canvas>
+    </div>
+
+    <!-- Animated Solid MacOS Waves -->
+    <div class="bg-waves">
+        <!-- SVG paths acting as solid intersecting blobs/waves -->
+        <svg class="wave-svg wave-1" preserveAspectRatio="none" viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+        <svg class="wave-svg wave-2" preserveAspectRatio="none" viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg" style="top: 10%">
+            <path d="M0,256L48,245.3C96,235,192,213,288,213.3C384,213,480,235,576,224C672,213,768,171,864,165.3C960,160,1056,192,1152,208C1248,224,1344,224,1392,224L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+        <svg class="wave-svg wave-3" preserveAspectRatio="none" viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg" style="top: 20%">
+            <path d="M0,96L48,112C96,128,192,160,288,165.3C384,171,480,149,576,133.3C672,117,768,107,864,122.7C960,139,1056,181,1152,197.3C1248,213,1344,203,1392,197.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+    </div>
+
+    <div id="cursor-dot"></div>
+
+    <div class="glass-layer">
+        <div class="container">
+            <header>
+                <h1 id="main-title" class="reveal-element">senturisk</h1>
+                <div id="tagline" class="tagline reveal-element">Own your lifestyle.</div>
+            </header>
+            
+            <div class="interactive-area">
+                <button id="contact-btn" class="reveal-element">Contact Us</button>
+
+                <div id="socials-section">
+                    <div class="controls">
+                        <button id="view-toggle" class="view-toggle" aria-label="Toggle View">
+                            <i id="toggle-icon" class="fa-solid fa-list"></i>
+                        </button>
+                    </div>
+
+                    <main>
+                        <div id="links-container" class="links-container grid-view">
+                            
+                            <a href="https://www.facebook.com/senturisk" target="_blank" class="card">
+                                <div class="icon-wrapper">
+                                    <i class="fa-brands fa-facebook-f"></i>
+                                </div>
+                                <div class="card-content">
+                                    <span class="platform">Facebook</span>
+                                    <span class="username">/senturisk</span>
+                                </div>
+                            </a>
+
+                            <a href="https://www.instagram.com/senturisk" target="_blank" class="card">
+                                <div class="icon-wrapper">
+                                    <i class="fa-brands fa-instagram"></i>
+                                </div>
+                                <div class="card-content">
+                                    <span class="platform">Instagram</span>
+                                    <span class="username">/senturisk</span>
+                                </div>
+                            </a>
+
+                            <a href="https://x.com/senturisk" target="_blank" class="card">
+                                <div class="icon-wrapper">
+                                    <i class="fa-brands fa-twitter"></i>
+                                </div>
+                                <div class="card-content">
+                                    <span class="platform">X</span>
+                                    <span class="username">/senturisk</span>
+                                </div>
+                            </a>
+
+                            <a href="https://linkedin.com/company/senturisk" target="_blank" class="card">
+                                <div class="icon-wrapper">
+                                    <i class="fa-brands fa-linkedin-in"></i>
+                                </div>
+                                <div class="card-content">
+                                    <span class="platform">LinkedIn</span>
+                                    <span class="username">/company/senturisk</span>
+                                </div>
+                            </a>
+
+                            <a href="https://www.youtube.com/@senturisk" target="_blank" class="card">
+                                <div class="icon-wrapper">
+                                    <i class="fa-brands fa-youtube"></i>
+                                </div>
+                                <div class="card-content">
+                                    <span class="platform">YouTube</span>
+                                    <span class="username">/@senturisk</span>
+                                </div>
+                            </a>
+
+                            <a href="https://github.com/senturisk" target="_blank" class="card">
+                                <div class="icon-wrapper">
+                                    <i class="fa-brands fa-github"></i>
+                                </div>
+                                <div class="card-content">
+                                    <span class="platform">GitHub</span>
+                                    <span class="username">/senturisk</span>
+                                </div>
+                            </a>
+
+                            <a href="https://huggingface.co/senturisk" target="_blank" class="card">
+                                <div class="icon-wrapper">
+                                    <i class="fa-solid fa-face-smile-beam"></i>
+                                </div>
+                                <div class="card-content">
+                                    <span class="platform">HuggingFace</span>
+                                    <span class="username">/senturisk</span>
+                                </div>
+                            </a>
+
+                            <a href="https://medium.com/@senturisk" target="_blank" class="card">
+                                <div class="icon-wrapper">
+                                    <i class="fa-brands fa-medium"></i>
+                                </div>
+                                <div class="card-content">
+                                    <span class="platform">Medium</span>
+                                    <span class="username">/@senturisk</span>
+                                </div>
+                            </a>
+
+                            <a href="https://senturisk.itch.io/" target="_blank" class="card">
+                                <div class="icon-wrapper">
+                                    <i class="fa-brands fa-itch-io"></i>
+                                </div>
+                                <div class="card-content">
+                                    <span class="platform">Itch.io</span>
+                                    <span class="username">senturisk.itch.io</span>
+                                </div>
+                            </a>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <footer id="footer-text" class="reveal-element">
+            Senturisk Corporation is a private equity firm in charge of multiple brands and businesses, mainly operating as a software and technology company with roots in academic and scientific research. As part of our policies, we do not have any official website so this landing page here only serves as a collection of social profile links with which Senturisk is officially affiliated with. Please note that this list is non-exhaustive and may not be updated with the latest links all the time.
+        </footer>
+    </div>
+
+    <script>
+        // Custom Cursor Logic
+        const cursorDot = document.getElementById('cursor-dot');
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursorDot.style.left = `${mouseX}px`;
+            cursorDot.style.top = `${mouseY}px`;
+        });
+
+        const interactables = document.querySelectorAll('a, button');
+        interactables.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorDot.style.width = '24px';
+                cursorDot.style.height = '24px';
+                cursorDot.style.backgroundColor = 'var(--text-main)';
+                cursorDot.style.mixBlendMode = 'difference';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorDot.style.width = '8px';
+                cursorDot.style.height = '8px';
+                cursorDot.style.backgroundColor = 'var(--accent)';
+                cursorDot.style.mixBlendMode = 'normal';
+            });
+        });
+
+        // Shockwave effect
+        window.addEventListener('mousedown', (e) => {
+            if(e.button !== 0) return; // Left click only
+            const shockwave = document.createElement('div');
+            shockwave.classList.add('shockwave');
+            shockwave.style.left = `${e.clientX}px`;
+            shockwave.style.top = `${e.clientY}px`;
+            document.body.appendChild(shockwave);
+            setTimeout(() => shockwave.remove(), 600);
+        });
+
+        // UI Reveal Logic
+        const contactBtn = document.getElementById('contact-btn');
+        const socialsSection = document.getElementById('socials-section');
+
+        contactBtn.addEventListener('click', () => {
+            contactBtn.classList.add('fade-out');
+            setTimeout(() => {
+                contactBtn.style.display = 'none';
+                socialsSection.classList.add('visible');
+            }, 400); 
+        });
+
+        // Grid/List Toggle Logic
+        const toggleBtn = document.getElementById('view-toggle');
+        const container = document.getElementById('links-container');
+        const toggleIcon = document.getElementById('toggle-icon');
+
+        let isGrid = true;
+        toggleBtn.addEventListener('click', () => {
+            isGrid = !isGrid;
+            if (isGrid) {
+                container.classList.remove('list-view');
+                container.classList.add('grid-view');
+                toggleIcon.className = 'fa-solid fa-list';
+            } else {
+                container.classList.remove('grid-view');
+                container.classList.add('list-view');
+                toggleIcon.className = 'fa-solid fa-border-all';
+            }
+        });
+
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        
+        let particles = [];
+        let targetPoints = [];
+        let animationId;
+        let w, h;
+        
+        let isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        let particleColor = isDarkMode ? '#f8fafc' : '#020617';
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            particleColor = e.matches ? '#f8fafc' : '#020617';
+        });
+
+        function resizeCanvas() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+
+        // Render text offscreen for point extraction
+        function extractTextPoints() {
+            ctx.clearRect(0, 0, w, h);
+            
+            const fontSize = Math.min(w * 0.18, 140);
+            ctx.font = `800 ${fontSize}px "Bricolage Grotesque", sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            ctx.fillStyle = '#000';
+            ctx.fillText('senturisk', w / 2, h / 2);
+
+            const imageData = ctx.getImageData(0, 0, w, h);
+            const data = imageData.data;
+            const points = [];
+            
+            const gap = 5; 
+            for (let y = 0; y < h; y += gap) {
+                for (let x = 0; x < w; x += gap) {
+                    const alpha = data[(y * w + x) * 4 + 3];
+                    if (alpha > 128) {
+                        points.push({ x, y });
+                    }
+                }
+            }
+            return points;
+        }
+
+        // Calculate a 2D projection mirroring the exact geometry in the provided logo image
+        function getLogoShapePoints(targetCount, w, h) {
+            const S = Math.min(w, h) * 0.35;
+            const cx = w / 2;
+            const cy = h / 2;
+            const pts = [];
+            const sqrt3 = Math.sqrt(3);
+            
+            // Map the exact vertices based on the 2D logo projection 
+            const v = [
+                {x: S, y: 0},                       // 0: Outer Right
+                {x: S/2, y: S * sqrt3/2},           // 1: Outer Bottom-Right
+                {x: -S/2, y: S * sqrt3/2},          // 2: Outer Bottom-Left
+                {x: -S, y: 0},                      // 3: Outer Left
+                {x: -S/2, y: -S * sqrt3/2},         // 4: Outer Top-Left
+                {x: S/2, y: -S * sqrt3/2},          // 5: Outer Top-Right
+                {x: S/2, y: 0},                     // 6: Inner Bottom-Right 
+                {x: -S/2, y: 0},                    // 7: Inner Bottom-Left 
+                {x: 0, y: -S/2}                     // 8: Inner Top 
+            ];
+
+            // Define the visual wireframe lines of the logo
+            const edges = [
+                // Outer Hexagon flat-topped bounds
+                [0,1], [1,2], [2,3], [3,4], [4,5], [5,0],
+                // Inner central upward triangle
+                [6,7], [7,8], [8,6],
+                // Interconnecting quadrilateral/triangle dividers
+                [6,0], [7,3], [6,1], [7,2], [8,4], [8,5] 
+            ];
+            
+            const pointsPerEdge = Math.ceil(targetCount / edges.length);
+            for (let edge of edges) {
+                const p1 = v[edge[0]];
+                const p2 = v[edge[1]];
+                for (let i = 0; i < pointsPerEdge; i++) {
+                    const t = i / pointsPerEdge;
+                    pts.push({
+                        x: cx + (p1.x + t * (p2.x - p1.x)),
+                        y: cy + (p1.y + t * (p2.y - p1.y))
+                    });
+                }
+            }
+            return pts.slice(0, targetCount);
+        }
+
+        class Particle {
+            constructor(target) {
+                this.x = Math.random() * w;
+                this.y = Math.random() * h;
+                this.tx = target.x;
+                this.ty = target.y;
+                this.vx = (Math.random() - 0.5) * 15;
+                this.vy = (Math.random() - 0.5) * 15;
+                this.radius = Math.random() * 1.5 + 1;
+                this.friction = 0.88;
+                this.springFactor = 0.08 + Math.random() * 0.05;
+                this.noiseScale = 0.015;
+                this.noiseForce = 1.0;
+            }
+
+            update(time) {
+                const dx = this.tx - this.x;
+                const dy = this.ty - this.y;
+                
+                const nx = Math.sin(this.y * this.noiseScale + time) * this.noiseForce;
+                const ny = Math.cos(this.x * this.noiseScale + time) * this.noiseForce;
+
+                this.vx += (dx * this.springFactor) + nx;
+                this.vy += (dy * this.springFactor) + ny;
+                
+                this.vx *= this.friction;
+                this.vy *= this.friction;
+                
+                this.x += this.vx;
+                this.y += this.vy;
+            }
+
+            draw(ctx) {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = particleColor;
+                ctx.fill(); 
+            }
+        }
+
+        function initParticles() {
+            resizeCanvas();
+            targetPoints = extractTextPoints();
+            particles = [];
+            
+            const maxParticles = 2500;
+            const step = Math.max(1, Math.floor(targetPoints.length / maxParticles));
+            
+            for (let i = 0; i < targetPoints.length; i += step) {
+                particles.push(new Particle(targetPoints[i]));
+            }
+        }
+
+        let startTime = Date.now();
+        let phase = 'converge';
+        window.isFadingOut = false;
+
+        function animateParticles() {
+            const currentTime = Date.now();
+            const elapsed = currentTime - startTime;
+            const timePhase = elapsed * 0.003;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Transition from text to specific geometric logo shape
+            if (phase === 'converge' && elapsed > 2000) {
+                phase = 'morph';
+                const shapePoints = getLogoShapePoints(particles.length, w, h);
+                particles.forEach((p, i) => {
+                    if (shapePoints[i]) {
+                        p.tx = shapePoints[i].x;
+                        p.ty = shapePoints[i].y;
+                        p.springFactor = 0.03 + Math.random() * 0.05;
+                    }
+                });
+            }
+
+            // Smooth radial dispersion phase
+            if (phase === 'morph' && elapsed > 4500) {
+                phase = 'disperse';
+                particles.forEach(p => {
+                    const angle = Math.atan2(p.y - h/2, p.x - w/2);
+                    const speed = 1000 + Math.random() * 1000;
+                    p.tx = p.x + Math.cos(angle) * speed;
+                    p.ty = p.y + Math.sin(angle) * speed;
+                    p.springFactor = 0.015;
+                    p.friction = 0.96; 
+                });
+            }
+
+            // Smooth background arrival & animation halt fix
+            if (phase === 'disperse' && elapsed > 5000 && !window.isFadingOut) {
+                window.isFadingOut = true;
+                const introContainer = document.getElementById('intro-container');
+                introContainer.style.opacity = '0';
+                
+                setTimeout(() => {
+                    introContainer.style.visibility = 'hidden';
+                    cancelAnimationFrame(animationId); // Delayed so canvas continues rendering through fade
+                    revealDOM();
+                }, 1200);
+            }
+
+            particles.forEach(p => {
+                p.update(timePhase);
+                p.draw(ctx);
+            });
+
+            // Keep drawing until visibility is explicitly 'hidden'
+            if (!window.isFadingOut || document.getElementById('intro-container').style.visibility !== 'hidden') {
+                animationId = requestAnimationFrame(animateParticles);
+            }
+        }
+
+        function revealDOM() {
+            const sequence = [
+                document.getElementById('main-title'),
+                document.getElementById('tagline'),
+                document.getElementById('contact-btn'),
+                document.getElementById('footer-text')
+            ];
+            
+            sequence.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.add('visible');
+                }, index * 200); 
+            });
+        }
+
+        // Initial Start
+        document.fonts.ready.then(() => {
+            initParticles();
+            animateParticles();
+        });
+
+        // Handle Resizing
+        window.addEventListener('resize', () => {
+            if(document.getElementById('intro-container').style.visibility !== 'hidden') {
+                cancelAnimationFrame(animationId);
+                initParticles();
+                animateParticles();
+            }
+        });
+    </script>
+</body>
+</html>
