@@ -212,7 +212,7 @@
 
         .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 1150px; /* Expanded to accommodate native widths for app embeds */
             margin-top: 5vh;
             flex-grow: 1;
             display: flex;
@@ -376,11 +376,11 @@
 
         /* --- Apps Grid Styles --- */
         .apps-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 1.5rem;
             width: 100%;
-            max-width: 800px;
             animation: fadeIn 0.5s ease;
         }
 
@@ -391,22 +391,17 @@
 
         .app-embed-container {
             width: 100%;
+            max-width: 552px;
             display: flex;
             justify-content: center;
         }
         
         .app-embed-container iframe {
             width: 100%;
-            max-width: 552px;
+            height: 167px;
             border-radius: var(--chamfer);
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             background-color: var(--card-bg);
-        }
-
-        @media (max-width: 768px) {
-            .apps-grid {
-                grid-template-columns: 1fr;
-            }
         }
 
         .controls {
