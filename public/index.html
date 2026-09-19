@@ -212,7 +212,7 @@
 
         .container {
             width: 100%;
-            max-width: 1150px; /* Expanded to accommodate native widths for app embeds */
+            max-width: 1150px;
             margin-top: 5vh;
             flex-grow: 1;
             display: flex;
@@ -374,12 +374,12 @@
             position: relative;
         }
 
-        /* --- Apps Grid Styles --- */
+        /* --- Apps Grid & Single-Column Web App Styles --- */
         .apps-grid {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 1.5rem;
+            gap: 1.25rem;
             width: 100%;
             animation: fadeIn 0.5s ease;
         }
@@ -402,6 +402,66 @@
             border-radius: var(--chamfer);
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             background-color: var(--card-bg);
+        }
+
+        .web-app-card {
+            width: 100%;
+            max-width: 650px;
+            background-color: var(--card-bg);
+            color: var(--card-fg);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            gap: 1.25rem;
+            clip-path: polygon(var(--chamfer) 0, 100% 0, 100% calc(100% - var(--chamfer)), calc(100% - var(--chamfer)) 100%, 0 100%, 0 var(--chamfer));
+            transition: all var(--trans-speed) var(--trans-easing);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .web-app-card:hover {
+            background-color: var(--card-fg);
+            color: var(--card-bg);
+            transform: translateY(-4px);
+        }
+
+        .web-app-icon {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            border-radius: 8px;
+            flex-shrink: 0;
+            background: rgba(125, 125, 125, 0.1);
+            padding: 4px;
+        }
+
+        .web-app-info {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            gap: 0.25rem;
+        }
+
+        .web-app-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+        }
+
+        .web-app-desc {
+            font-size: 0.9rem;
+            font-weight: 500;
+            opacity: 0.75;
+        }
+
+        .web-app-action {
+            font-size: 1.1rem;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .web-app-card:hover .web-app-action {
+            opacity: 1;
         }
 
         .controls {
@@ -744,7 +804,7 @@
             setTimeout(() => shockwave.remove(), 600);
         });
 
-        // App Embed Data (JSON)
+        // App Data Structure
         const appsData = {
             android: [
                 '<iframe frameborder="0" src="https://itch.io/embed/5025655?bg_color=ffffff&amp;fg_color=222222&amp;link_color=7640af&amp;border_color=bebebe" width="552" height="167"><a href="https://senturisk.itch.io/sen-droid">Sen Droid by Senturisk Apps</a></iframe>',
@@ -753,9 +813,49 @@
                 '<iframe frameborder="0" src="https://itch.io/embed/5025989?bg_color=ffffff&amp;fg_color=222222&amp;link_color=7640af&amp;border_color=bebebe" width="552" height="167"><a href="https://senturisk.itch.io/sen-player">Sen Player by Senturisk Apps</a></iframe>'
             ],
             web: [
-                '<iframe frameborder="0" src="https://itch.io/embed/5027010?bg_color=ffffff&amp;fg_color=222222&amp;link_color=7640af&amp;border_color=bebebe" width="552" height="167"><a href="https://senturisk.itch.io/sen-vibe">Sen Vibe by Senturisk Apps</a></iframe>',
-                '<iframe frameborder="0" src="https://itch.io/embed/5025922?bg_color=ffffff&amp;fg_color=222222&amp;link_color=7640af&amp;border_color=bebebe" width="552" height="167"><a href="https://senturisk.itch.io/sen-slides">Sen Slides by Senturisk Apps</a></iframe>',
-                '<iframe frameborder="0" src="https://itch.io/embed/5025677?bg_color=ffffff&amp;fg_color=222222&amp;link_color=7640af&amp;border_color=bebebe" width="552" height="167"><a href="https://senturisk.itch.io/sen-send">Sen Send by Senturisk Apps</a></iframe>'
+                {
+                    name: "Makron",
+                    desc: "Online tools for everyday use",
+                    icon: "https://makron.app/assets/logo.png",
+                    url: "https://makron.app"
+                },
+                {
+                    name: "Makron Social",
+                    desc: "Social media platform",
+                    icon: "https://social.makron.app/icon.png",
+                    url: "https://social.makron.app/"
+                },
+                {
+                    name: "Makron CV",
+                    desc: "Online CV builder",
+                    icon: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMxMjQ0YzQiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTQgMkg2YTIgMiAwIDAgMC0yIDJ2MTZhMiAyIDAgMCAwIDIgMmgxMmEyIDIgMCAwIDAgMi0yVjh6Ii8+PHBvbHlsaW5lIHBvaW50cz0iMTQgMiAxNCA4IDIwIDgiLz48bGluZSB4MT0iMTYiIHkxPSIxMyIgeDI9IjgiIHkyPSIxMyIvPjxsaW5lIHgxPSIxNiIgeTE9IjE3IiB4Mj0iOCIgeTI9IjE3Ii8+PHBvbHlsaW5lIHBvaW50cz0iMTAgOSAxMCA5IDggOSIvPjwvc3ZnPg==",
+                    url: "https://cv.makron.app/"
+                },
+		{
+                    name: "Mux AI",
+                    desc: "Customizable uncensored LLM personas",
+                    icon: "https://muxai.vercel.app/logo.png",
+                    url: "https://muxai.makron.app"
+                },
+
+                {
+                    name: "Sen Vibe",
+                    desc: "Easy virtual watch parties",
+                    icon: "https://vibe.makron.app/favicon.png",
+                    url: "https://vibe.makron.app"
+                },
+                {
+                    name: "Sen Slides",
+                    desc: "Presentation tool",
+                    icon: "https://slides.makron.app/icon.png",
+                    url: "https://slides.makron.app"
+                },
+                {
+                    name: "Sen Send",
+                    desc: "P2P file sharing & messaging",
+                    icon: "https://send.makron.app/logo.svg",
+                    url: "https://send.makron.app"
+                }
             ]
         };
 
@@ -786,11 +886,31 @@
 
                     // Populate grids dynamically via JSON
                     appsGrid.innerHTML = '';
-                    appsData[target].forEach(embedHtml => {
-                        const embedWrapper = document.createElement('div');
-                        embedWrapper.className = 'app-embed-container';
-                        embedWrapper.innerHTML = embedHtml;
-                        appsGrid.appendChild(embedWrapper);
+                    appsData[target].forEach(item => {
+                        if (typeof item === 'string') {
+                            // Render HTML Embed (Android)
+                            const embedWrapper = document.createElement('div');
+                            embedWrapper.className = 'app-embed-container';
+                            embedWrapper.innerHTML = item;
+                            appsGrid.appendChild(embedWrapper);
+                        } else {
+                            // Render Single-Column Web App Item
+                            const card = document.createElement('a');
+                            card.href = item.url;
+                            card.target = '_blank';
+                            card.className = 'web-app-card';
+                            card.innerHTML = `
+                                <img src="${item.icon}" alt="${item.name}" class="web-app-icon" onerror="this.style.opacity='0'">
+                                <div class="web-app-info">
+                                    <span class="web-app-title">${item.name}</span>
+                                    <span class="web-app-desc">${item.desc}</span>
+                                </div>
+                                <div class="web-app-action">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </div>
+                            `;
+                            appsGrid.appendChild(card);
+                        }
                     });
                     
                     attachCursorEvents(appsGrid.querySelectorAll('a, iframe'));
