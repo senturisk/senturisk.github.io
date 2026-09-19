@@ -213,11 +213,65 @@
         .container {
             width: 100%;
             max-width: 800px;
-            margin-top: 10vh;
+            margin-top: 5vh;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
             position: relative;
+        }
+
+        /* --- Navbar Styles --- */
+        #top-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+        }
+
+        .nav-tab {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 1.1rem;
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0.25rem;
+            opacity: 0.7;
+            transition: opacity 0.3s ease, font-weight 0.3s ease;
+        }
+
+        .nav-tab::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--text-main);
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+        }
+
+        .nav-tab:hover {
+            opacity: 1;
+        }
+
+        .nav-tab:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        .nav-tab.active {
+            font-weight: 800;
+            opacity: 1;
+        }
+
+        .nav-tab.active::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
         }
 
         .reveal-element {
@@ -251,6 +305,17 @@
             color: var(--text-muted);
             letter-spacing: 0.05em;
             text-transform: uppercase;
+        }
+
+        .view-section {
+            width: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .view-section.active-view {
+            display: flex;
         }
 
         .interactive-area {
@@ -307,6 +372,41 @@
             visibility: visible;
             transform: translateY(0);
             position: relative;
+        }
+
+        /* --- Apps Grid Styles --- */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 800px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .app-embed-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .app-embed-container iframe {
+            width: 100%;
+            max-width: 552px;
+            border-radius: var(--chamfer);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            background-color: var(--card-bg);
+        }
+
+        @media (max-width: 768px) {
+            .apps-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .controls {
@@ -409,7 +509,7 @@
         
         .links-container.list-view .card { 
             width: 100%; 
-            height: 90px; /* Predictable height for positioning */
+            height: 90px;
             justify-content: flex-start; 
             padding: 0 1.5rem;
         }
@@ -420,7 +520,7 @@
             top: 0;
             bottom: 0;
             justify-content: space-between;
-            padding: 1.2rem 0; /* Vertical spacing inside absolute container */
+            padding: 1.2rem 0;
             align-items: flex-end;
         }
 
@@ -458,7 +558,6 @@
 
     <!-- Animated Solid MacOS Waves -->
     <div class="bg-waves">
-        <!-- SVG paths acting as solid intersecting blobs/waves -->
         <svg class="wave-svg wave-1" preserveAspectRatio="none" viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
             <path d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
         </svg>
@@ -474,117 +573,132 @@
 
     <div class="glass-layer">
         <div class="container">
+            
+            <nav id="top-nav" class="reveal-element">
+                <button class="nav-tab" data-target="android">Android Apps</button>
+                <button class="nav-tab" data-target="web">Web Apps</button>
+                <button class="nav-tab" data-target="contact" id="nav-contact" style="display: none;">Contact</button>
+            </nav>
+
             <header>
                 <h1 id="main-title" class="reveal-element">senturisk</h1>
                 <div id="tagline" class="tagline reveal-element">Own your lifestyle.</div>
             </header>
             
-            <div class="interactive-area">
-                <button id="contact-btn" class="reveal-element">Contact Us</button>
+            <div id="view-contact" class="view-section active-view">
+                <div class="interactive-area">
+                    <button id="contact-btn" class="reveal-element">Contact Us</button>
 
-                <div id="socials-section">
-                    <div class="controls">
-                        <button id="view-toggle" class="view-toggle" aria-label="Toggle View">
-                            <i id="toggle-icon" class="fa-solid fa-list"></i>
-                        </button>
-                    </div>
-
-                    <main>
-                        <div id="links-container" class="links-container grid-view">
-                            
-                            <a href="https://www.facebook.com/senturisk" target="_blank" class="card">
-                                <div class="icon-wrapper">
-                                    <i class="fa-brands fa-facebook-f"></i>
-                                </div>
-                                <div class="card-content">
-                                    <span class="platform">Facebook</span>
-                                    <span class="username">/senturisk</span>
-                                </div>
-                            </a>
-
-                            <a href="https://www.instagram.com/senturisk" target="_blank" class="card">
-                                <div class="icon-wrapper">
-                                    <i class="fa-brands fa-instagram"></i>
-                                </div>
-                                <div class="card-content">
-                                    <span class="platform">Instagram</span>
-                                    <span class="username">/senturisk</span>
-                                </div>
-                            </a>
-
-                            <a href="https://x.com/senturisk" target="_blank" class="card">
-                                <div class="icon-wrapper">
-                                    <i class="fa-brands fa-twitter"></i>
-                                </div>
-                                <div class="card-content">
-                                    <span class="platform">X</span>
-                                    <span class="username">/senturisk</span>
-                                </div>
-                            </a>
-
-                            <a href="https://linkedin.com/company/senturisk" target="_blank" class="card">
-                                <div class="icon-wrapper">
-                                    <i class="fa-brands fa-linkedin-in"></i>
-                                </div>
-                                <div class="card-content">
-                                    <span class="platform">LinkedIn</span>
-                                    <span class="username">/company/senturisk</span>
-                                </div>
-                            </a>
-
-                            <a href="https://www.youtube.com/@senturisk" target="_blank" class="card">
-                                <div class="icon-wrapper">
-                                    <i class="fa-brands fa-youtube"></i>
-                                </div>
-                                <div class="card-content">
-                                    <span class="platform">YouTube</span>
-                                    <span class="username">/@senturisk</span>
-                                </div>
-                            </a>
-
-                            <a href="https://github.com/senturisk" target="_blank" class="card">
-                                <div class="icon-wrapper">
-                                    <i class="fa-brands fa-github"></i>
-                                </div>
-                                <div class="card-content">
-                                    <span class="platform">GitHub</span>
-                                    <span class="username">/senturisk</span>
-                                </div>
-                            </a>
-
-                            <a href="https://huggingface.co/senturisk" target="_blank" class="card">
-                                <div class="icon-wrapper">
-                                    <i class="fa-solid fa-face-smile-beam"></i>
-                                </div>
-                                <div class="card-content">
-                                    <span class="platform">HuggingFace</span>
-                                    <span class="username">/senturisk</span>
-                                </div>
-                            </a>
-
-                            <a href="https://medium.com/@senturisk" target="_blank" class="card">
-                                <div class="icon-wrapper">
-                                    <i class="fa-brands fa-medium"></i>
-                                </div>
-                                <div class="card-content">
-                                    <span class="platform">Medium</span>
-                                    <span class="username">/@senturisk</span>
-                                </div>
-                            </a>
-
-                            <a href="https://senturisk.itch.io/" target="_blank" class="card">
-                                <div class="icon-wrapper">
-                                    <i class="fa-brands fa-itch-io"></i>
-                                </div>
-                                <div class="card-content">
-                                    <span class="platform">Itch.io</span>
-                                    <span class="username">senturisk.itch.io</span>
-                                </div>
-                            </a>
+                    <div id="socials-section">
+                        <div class="controls">
+                            <button id="view-toggle" class="view-toggle" aria-label="Toggle View">
+                                <i id="toggle-icon" class="fa-solid fa-list"></i>
+                            </button>
                         </div>
-                    </main>
+
+                        <main>
+                            <div id="links-container" class="links-container grid-view">
+                                
+                                <a href="https://www.facebook.com/senturisk" target="_blank" class="card">
+                                    <div class="icon-wrapper">
+                                        <i class="fa-brands fa-facebook-f"></i>
+                                    </div>
+                                    <div class="card-content">
+                                        <span class="platform">Facebook</span>
+                                        <span class="username">/senturisk</span>
+                                    </div>
+                                </a>
+
+                                <a href="https://www.instagram.com/senturisk" target="_blank" class="card">
+                                    <div class="icon-wrapper">
+                                        <i class="fa-brands fa-instagram"></i>
+                                    </div>
+                                    <div class="card-content">
+                                        <span class="platform">Instagram</span>
+                                        <span class="username">/senturisk</span>
+                                    </div>
+                                </a>
+
+                                <a href="https://x.com/senturisk" target="_blank" class="card">
+                                    <div class="icon-wrapper">
+                                        <i class="fa-brands fa-twitter"></i>
+                                    </div>
+                                    <div class="card-content">
+                                        <span class="platform">X</span>
+                                        <span class="username">/senturisk</span>
+                                    </div>
+                                </a>
+
+                                <a href="https://linkedin.com/company/senturisk" target="_blank" class="card">
+                                    <div class="icon-wrapper">
+                                        <i class="fa-brands fa-linkedin-in"></i>
+                                    </div>
+                                    <div class="card-content">
+                                        <span class="platform">LinkedIn</span>
+                                        <span class="username">/company/senturisk</span>
+                                    </div>
+                                </a>
+
+                                <a href="https://www.youtube.com/@senturisk" target="_blank" class="card">
+                                    <div class="icon-wrapper">
+                                        <i class="fa-brands fa-youtube"></i>
+                                    </div>
+                                    <div class="card-content">
+                                        <span class="platform">YouTube</span>
+                                        <span class="username">/@senturisk</span>
+                                    </div>
+                                </a>
+
+                                <a href="https://github.com/senturisk" target="_blank" class="card">
+                                    <div class="icon-wrapper">
+                                        <i class="fa-brands fa-github"></i>
+                                    </div>
+                                    <div class="card-content">
+                                        <span class="platform">GitHub</span>
+                                        <span class="username">/senturisk</span>
+                                    </div>
+                                </a>
+
+                                <a href="https://huggingface.co/senturisk" target="_blank" class="card">
+                                    <div class="icon-wrapper">
+                                        <i class="fa-solid fa-face-smile-beam"></i>
+                                    </div>
+                                    <div class="card-content">
+                                        <span class="platform">HuggingFace</span>
+                                        <span class="username">/senturisk</span>
+                                    </div>
+                                </a>
+
+                                <a href="https://medium.com/@senturisk" target="_blank" class="card">
+                                    <div class="icon-wrapper">
+                                        <i class="fa-brands fa-medium"></i>
+                                    </div>
+                                    <div class="card-content">
+                                        <span class="platform">Medium</span>
+                                        <span class="username">/@senturisk</span>
+                                    </div>
+                                </a>
+
+                                <a href="https://senturisk.itch.io/" target="_blank" class="card">
+                                    <div class="icon-wrapper">
+                                        <i class="fa-brands fa-itch-io"></i>
+                                    </div>
+                                    <div class="card-content">
+                                        <span class="platform">Itch.io</span>
+                                        <span class="username">senturisk.itch.io</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </main>
+                    </div>
                 </div>
             </div>
+
+            <!-- Apps View Area -->
+            <div id="view-apps" class="view-section">
+                <div id="apps-grid" class="apps-grid"></div>
+            </div>
+
         </div>
 
         <footer id="footer-text" class="reveal-element">
@@ -605,21 +719,24 @@
             cursorDot.style.top = `${mouseY}px`;
         });
 
-        const interactables = document.querySelectorAll('a, button');
-        interactables.forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursorDot.style.width = '24px';
-                cursorDot.style.height = '24px';
-                cursorDot.style.backgroundColor = 'var(--text-main)';
-                cursorDot.style.mixBlendMode = 'difference';
+        function attachCursorEvents(elements) {
+            elements.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursorDot.style.width = '24px';
+                    cursorDot.style.height = '24px';
+                    cursorDot.style.backgroundColor = 'var(--text-main)';
+                    cursorDot.style.mixBlendMode = 'difference';
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursorDot.style.width = '8px';
+                    cursorDot.style.height = '8px';
+                    cursorDot.style.backgroundColor = 'var(--accent)';
+                    cursorDot.style.mixBlendMode = 'normal';
+                });
             });
-            el.addEventListener('mouseleave', () => {
-                cursorDot.style.width = '8px';
-                cursorDot.style.height = '8px';
-                cursorDot.style.backgroundColor = 'var(--accent)';
-                cursorDot.style.mixBlendMode = 'normal';
-            });
-        });
+        }
+        
+        attachCursorEvents(document.querySelectorAll('a, button'));
 
         // Shockwave effect
         window.addEventListener('mousedown', (e) => {
@@ -630,6 +747,60 @@
             shockwave.style.top = `${e.clientY}px`;
             document.body.appendChild(shockwave);
             setTimeout(() => shockwave.remove(), 600);
+        });
+
+        // App Embed Data (JSON)
+        const appsData = {
+            android: [
+                '<iframe frameborder="0" src="https://itch.io/embed/5025655?bg_color=ffffff&amp;fg_color=222222&amp;link_color=7640af&amp;border_color=bebebe" width="552" height="167"><a href="https://senturisk.itch.io/sen-droid">Sen Droid by Senturisk Apps</a></iframe>',
+                '<iframe frameborder="0" src="https://itch.io/embed/5025829?bg_color=ffffff&amp;fg_color=222222&amp;link_color=7640af&amp;border_color=bebebe" width="552" height="167"><a href="https://senturisk.itch.io/sen-camera">Sen Camera by Senturisk Apps</a></iframe>',
+                '<iframe frameborder="0" src="https://itch.io/embed/5025882?bg_color=ffffff&amp;fg_color=222222&amp;link_color=7640af&amp;border_color=bebebe" width="552" height="167"><a href="https://senturisk.itch.io/sen-freezer">Sen Freezer by Senturisk Apps</a></iframe>',
+                '<iframe frameborder="0" src="https://itch.io/embed/5025989?bg_color=ffffff&amp;fg_color=222222&amp;link_color=7640af&amp;border_color=bebebe" width="552" height="167"><a href="https://senturisk.itch.io/sen-player">Sen Player by Senturisk Apps</a></iframe>'
+            ],
+            web: [
+                '<iframe frameborder="0" src="https://itch.io/embed/5027010?bg_color=ffffff&amp;fg_color=222222&amp;link_color=7640af&amp;border_color=bebebe" width="552" height="167"><a href="https://senturisk.itch.io/sen-vibe">Sen Vibe by Senturisk Apps</a></iframe>',
+                '<iframe frameborder="0" src="https://itch.io/embed/5025922?bg_color=ffffff&amp;fg_color=222222&amp;link_color=7640af&amp;border_color=bebebe" width="552" height="167"><a href="https://senturisk.itch.io/sen-slides">Sen Slides by Senturisk Apps</a></iframe>',
+                '<iframe frameborder="0" src="https://itch.io/embed/5025677?bg_color=ffffff&amp;fg_color=222222&amp;link_color=7640af&amp;border_color=bebebe" width="552" height="167"><a href="https://senturisk.itch.io/sen-send">Sen Send by Senturisk Apps</a></iframe>'
+            ]
+        };
+
+        // Tab Navigation Logic
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const viewContact = document.getElementById('view-contact');
+        const viewApps = document.getElementById('view-apps');
+        const appsGrid = document.getElementById('apps-grid');
+        const navContactBtn = document.getElementById('nav-contact');
+
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.getAttribute('data-target');
+
+                navTabs.forEach(t => t.classList.remove('active'));
+
+                if (target === 'contact') {
+                    // Revert to default contact view
+                    viewApps.classList.remove('active-view');
+                    viewContact.classList.add('active-view');
+                    navContactBtn.style.display = 'none';
+                } else {
+                    // Switch to apps view
+                    tab.classList.add('active');
+                    viewContact.classList.remove('active-view');
+                    viewApps.classList.add('active-view');
+                    navContactBtn.style.display = 'block';
+
+                    // Populate grids dynamically via JSON
+                    appsGrid.innerHTML = '';
+                    appsData[target].forEach(embedHtml => {
+                        const embedWrapper = document.createElement('div');
+                        embedWrapper.className = 'app-embed-container';
+                        embedWrapper.innerHTML = embedHtml;
+                        appsGrid.appendChild(embedWrapper);
+                    });
+                    
+                    attachCursorEvents(appsGrid.querySelectorAll('a, iframe'));
+                }
+            });
         });
 
         // UI Reveal Logic
@@ -663,6 +834,7 @@
             }
         });
 
+        // Intro Particles Rendering
         const canvas = document.getElementById('particle-canvas');
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
         
@@ -711,7 +883,6 @@
             return points;
         }
 
-        // Calculate a 2D projection mirroring the exact geometry in the provided logo image
         function getLogoShapePoints(targetCount, w, h) {
             const S = Math.min(w, h) * 0.35;
             const cx = w / 2;
@@ -719,26 +890,21 @@
             const pts = [];
             const sqrt3 = Math.sqrt(3);
             
-            // Map the exact vertices based on the 2D logo projection 
             const v = [
-                {x: S, y: 0},                       // 0: Outer Right
-                {x: S/2, y: S * sqrt3/2},           // 1: Outer Bottom-Right
-                {x: -S/2, y: S * sqrt3/2},          // 2: Outer Bottom-Left
-                {x: -S, y: 0},                      // 3: Outer Left
-                {x: -S/2, y: -S * sqrt3/2},         // 4: Outer Top-Left
-                {x: S/2, y: -S * sqrt3/2},          // 5: Outer Top-Right
-                {x: S/2, y: 0},                     // 6: Inner Bottom-Right 
-                {x: -S/2, y: 0},                    // 7: Inner Bottom-Left 
-                {x: 0, y: -S/2}                     // 8: Inner Top 
+                {x: S, y: 0},
+                {x: S/2, y: S * sqrt3/2},
+                {x: -S/2, y: S * sqrt3/2},
+                {x: -S, y: 0},
+                {x: -S/2, y: -S * sqrt3/2},
+                {x: S/2, y: -S * sqrt3/2},
+                {x: S/2, y: 0},
+                {x: -S/2, y: 0},
+                {x: 0, y: -S/2}
             ];
 
-            // Define the visual wireframe lines of the logo
             const edges = [
-                // Outer Hexagon flat-topped bounds
                 [0,1], [1,2], [2,3], [3,4], [4,5], [5,0],
-                // Inner central upward triangle
                 [6,7], [7,8], [8,6],
-                // Interconnecting quadrilateral/triangle dividers
                 [6,0], [7,3], [6,1], [7,2], [8,4], [8,5] 
             ];
             
@@ -821,7 +987,6 @@
 
             ctx.clearRect(0, 0, w, h);
 
-            // Transition from text to specific geometric logo shape
             if (phase === 'converge' && elapsed > 2000) {
                 phase = 'morph';
                 const shapePoints = getLogoShapePoints(particles.length, w, h);
@@ -834,7 +999,6 @@
                 });
             }
 
-            // Smooth radial dispersion phase
             if (phase === 'morph' && elapsed > 4500) {
                 phase = 'disperse';
                 particles.forEach(p => {
@@ -847,7 +1011,6 @@
                 });
             }
 
-            // Smooth background arrival & animation halt fix
             if (phase === 'disperse' && elapsed > 5000 && !window.isFadingOut) {
                 window.isFadingOut = true;
                 const introContainer = document.getElementById('intro-container');
@@ -855,7 +1018,7 @@
                 
                 setTimeout(() => {
                     introContainer.style.visibility = 'hidden';
-                    cancelAnimationFrame(animationId); // Delayed so canvas continues rendering through fade
+                    cancelAnimationFrame(animationId);
                     revealDOM();
                 }, 1200);
             }
@@ -865,7 +1028,6 @@
                 p.draw(ctx);
             });
 
-            // Keep drawing until visibility is explicitly 'hidden'
             if (!window.isFadingOut || document.getElementById('intro-container').style.visibility !== 'hidden') {
                 animationId = requestAnimationFrame(animateParticles);
             }
@@ -873,6 +1035,7 @@
 
         function revealDOM() {
             const sequence = [
+                document.getElementById('top-nav'),
                 document.getElementById('main-title'),
                 document.getElementById('tagline'),
                 document.getElementById('contact-btn'),
@@ -880,9 +1043,11 @@
             ];
             
             sequence.forEach((el, index) => {
-                setTimeout(() => {
-                    el.classList.add('visible');
-                }, index * 200); 
+                if(el) {
+                    setTimeout(() => {
+                        el.classList.add('visible');
+                    }, index * 200);
+                }
             });
         }
 
